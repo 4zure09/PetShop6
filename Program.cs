@@ -26,6 +26,16 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddAuthentication(options =>{
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,6 +69,7 @@ else
 
 // Thêm middleware xác thực JWT
 app.UseRouting();
+app.UseCors("AllowOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 
